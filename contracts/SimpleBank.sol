@@ -14,7 +14,7 @@ contract SimpleBank {
     
     // Fill in the visibility keyword. 
     // Hint: We want to protect our users balance from other contracts
-    mapping (address => uint) private balances;
+    mapping (address => uint) internal balances;
     
     // Fill in the visibility keyword
     // Hint: We want to create a getter function and allow contracts to be able
@@ -89,7 +89,7 @@ contract SimpleBank {
     /// @dev This does not return any excess ether sent to it
     /// @param withdrawAmount amount you want to withdraw
     /// @return The balance remaining for the user
-    function withdraw(uint withdrawAmount) public returns (uint) {
+    function withdraw(uint withdrawAmount) public payable returns (uint) {
       // If the sender's balance is at least the amount they want to withdraw,
       // Subtract the amount from the sender's balance, and try to send that amount of ether
       // to the user attempting to withdraw. 
