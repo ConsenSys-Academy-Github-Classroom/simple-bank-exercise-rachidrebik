@@ -3,7 +3,6 @@
  * See the latest Solidity updates at
  * https://solidity.readthedocs.io/en/latest/080-breaking-changes.html
  */
-// SPDX-License-Identifier: MIT
 pragma solidity >=0.5.16 <0.9.0;
 
 contract SimpleBank {
@@ -14,7 +13,7 @@ contract SimpleBank {
     
     // Fill in the visibility keyword. 
     // Hint: We want to protect our users balance from other contracts
-    mapping (address => uint) internal balances;
+    mapping (address => uint) private balances;
     
     // Fill in the visibility keyword
     // Hint: We want to create a getter function and allow contracts to be able
@@ -62,8 +61,9 @@ contract SimpleBank {
     /// @notice Enroll a customer with the bank
     /// @return The users enrolled status
     // Emit the appropriate event
-    function enroll() public  returns (bool){
+    function enroll() public returns (bool){
       // 1. enroll of the sender of this transaction
+      // enrolled[msg.sender, true];
       enrolled[msg.sender] = true;
       emit LogEnrolled(msg.sender);
       return enrolled[msg.sender];
@@ -73,14 +73,14 @@ contract SimpleBank {
     /// @return The balance of the user after the deposit is made
     function deposit() public payable returns (uint) {
       // 1. Add the appropriate keyword so that this function can receive ether
-    
+      // SM - added payable
       // 2. Users should be enrolled before they can make deposits
-       require(enrolled[msg.sender]);
+      require(enrolled[msg.sender]);
       // 3. Add the amount to the user's balance. Hint: the amount can be
       //    accessed from of the global variable `msg`
-       balances[msg.sender] = balances[msg.sender] + msg.value;
+      balances[msg.sender] = balances[msg.sender] + msg.value;
       // 4. Emit the appropriate event associated with this function
-       emit LogDepositMade(msg.sender, msg.value);
+      emit LogDepositMade(msg.sender, msg.value);
       // 5. return the balance of sndr of this transaction
       return balances[msg.sender];
     }
@@ -96,12 +96,12 @@ contract SimpleBank {
       // return the user's balance.
 
       // 1. Use a require expression to guard/ensure sender has enough funds
-         require(balances[msg.sender] >= withdrawAmount);
+      require(balances[msg.sender] >= withdrawAmount);
       // 2. Transfer Eth to the sender and decrement the withdrawal amount from
       //    sender's balance
-         balances[msg.sender] = balances[msg.sender] - withdrawAmount;
+      balances[msg.sender] = balances[msg.sender] - withdrawAmount;
       // 3. Emit the appropriate event for this message
-         emit LogWithdrawal(msg.sender, withdrawAmount, balances[msg.sender]);
-         return balances[msg.sender];
+      emit LogWithdrawal(msg.sender, withdrawAmount, balances[msg.sender]);
+      return balances[msg.sender];
     }
 }
